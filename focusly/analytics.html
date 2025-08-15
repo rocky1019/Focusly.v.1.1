@@ -1,0 +1,78 @@
+<!-- analytics.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Analytics – Focusly</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .analytics-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 2rem;
+      display: grid;
+      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card h3 {
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .stat {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 style="text-align:center; padding:1rem 0;">📊 Premium Analytics</h1>
+  </header>
+
+  <div class="analytics-container">
+    <div class="card">
+      <h3>Total Time Studied</h3>
+      <div class="stat">4h 20m</div>
+    </div>
+    <div class="card">
+      <h3>Tasks Completed</h3>
+      <div class="stat">17</div>
+    </div>
+    <div class="card">
+      <h3>Focus Streak</h3>
+      <div class="stat">🔥 5 Days</div>
+    </div>
+    <div class="card">
+      <h3>Rooms Joined</h3>
+      <div class="stat">8</div>
+    </div>
+    <div class="card">
+      <h3>Sessions This Week</h3>
+      <div class="stat">11</div>
+    </div>
+    <div class="card">
+      <h3>Tasks Per Day Avg</h3>
+      <div class="stat">3.4</div>
+    </div>
+  </div>
+      <a href="home.html" class="back-link">← Back to Home</a>
+
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!-- ✅ room.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Room – Focusly</title>
+  <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="room.css" />
+</head>
+<body class="study-room">
+
+  <header class="room-header">
+    <div class="logo"><img src="ills/Ffavi2.png" alt="Logo" style="height: 34px; vertical-align: middle;" /> Focusly</div>
+    <div class="room-id">Room ID: <span id="roomIdDisplay"></span></div>
+    <button onclick="leaveRoom()" class="leave-btn">🚪 Leave Room</button>
+    <div class="theme-switcher">
+  <select id="themeSelect">
+    <option value="">Default Theme</option>
+    <option value="linear-gradient(135deg, #667eea, #764ba2)">Purple Bliss</option>
+    <option value="linear-gradient(135deg, #f7971e, #ffd200)">Sunny Day</option>
+    <option value="linear-gradient(135deg, #11998e, #38ef7d)">Emerald Flow</option>
+    <option value="linear-gradient(135deg, #ff416c, #ff4b2b)">Sunset Glow</option>
+  </select>
+</div>
+
+  </header>
+
+  <main class="room-grid">
+    <section class="left-panel">
+      <div id="memberList" class="member-box">
+  <h3>🧑‍🤝‍🧑 Members in Room:</h3>
+<div id="memberCount"></div> <!-- <- You can show total here -->
+<ul id="memberNames"></ul>  <!-- <- And names will show here -->
+
+</div>
+
+      <h2>⏱ Focus Timer</h2>
+<div id="timerDisplay">25:00</div>
+<div class="timer-controls">
+  <button id="startTimerBtn">Start</button>
+  <button id="resetTimerBtn">Reset</button>
+</div>
+
+
+      <h3>📝 Task List</h3>
+      <ul id="taskList">
+      </ul>
+      <input type="text" id="newTask" placeholder="New task..." />
+<button onclick="addTask()">Add Task</button>
+<ul id="taskList"></ul>
+    </section>
+
+    
+    <section class="center-panel">
+  <h2>🧠 Study Whiteboard</h2>
+
+  <div class="whiteboard-toolbar">
+    <label>Color:
+      <input type="color" id="colorPicker" value="#000000" />
+    </label>
+    <label>Size:
+      <input type="range" id="brushSize" min="1" max="10" value="2" />
+    </label>
+    <button id="clearBtn">🧽 Clear Board</button>
+  </div>
+
+  <canvas id="whiteboard"></canvas>
+</section>
+
+
+
+    <section class="right-panel">
+      <h2>💬 Chat</h2>
+      <div class="chat-container">
+        <div id="chatBox" class="chat-box"></div>
+        <div class="chat-input-group">
+          <input type="text" id="chatInput" placeholder="Type a message..." />
+          <button onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ❌ REMOVE these lines completely -->
+<!--
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="js/room.js"></script>
+-->
+
+<!-- ✅ KEEP ONLY this -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCrqad_1R9l322_Rg0K-UtKImEMn2nqWcE",
+    authDomain: "atharva19focusly.firebaseapp.com",
+    databaseURL: "https://atharva19focusly-default-rtdb.firebaseio.com",
+    projectId: "atharva19focusly",
+    storageBucket: "atharva19focusly.appspot.com",
+    messagingSenderId: "277269253347",
+    appId: "1:277269253347:web:20b6f3cc29473f3093c9d6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+// Check URL for ?code=ROOMCODE
+const urlParams = new URLSearchParams(window.location.search);
+let roomId = urlParams.get("code");
+
+if (!roomId) {
+  // fallback: generate a new room if no code is in URL
+  roomId = localStorage.getItem("roomId");
+  if (!roomId) {
+    roomId = "room-" + Math.random().toString(36).substring(2, 8);
+    localStorage.setItem("roomId", roomId);
+  }
+}
+
+  document.getElementById("roomIdDisplay").textContent = roomId;
+
+  const chatRef = ref(db, `rooms/${roomId}/chat`);
+
+window.sendMessage = () => {
+  const input = document.getElementById("chatInput");
+  const message = input.value.trim();
+  if (message !== "") {
+    push(chatRef, {
+      user: userId.slice(0, 5), // only first 5 chars
+      text: message,
+      timestamp: Date.now()
+    });
+    input.value = "";
+  }
+};
+
+
+
+  const chatBox = document.getElementById("chatBox");
+  onChildAdded(chatRef, (snapshot) => {
+    const msg = snapshot.val();
+    const msgDiv = document.createElement("div");
+    msgDiv.textContent = `${msg.user}: ${msg.text}`;
+    chatBox.appendChild(msgDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+
+  window.leaveRoom = () => {
+    localStorage.removeItem("roomId");
+    window.location.href = "home.html";
+  };
+  window.addTask = () => {
+  const taskInput = document.getElementById("newTask");
+  const taskText = taskInput.value.trim();
+
+  if (taskText !== "") {
+    const li = document.createElement("li");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    li.appendChild(checkbox);
+    li.appendChild(document.createTextNode(" " + taskText));
+    document.getElementById("taskList").appendChild(li);
+
+    taskInput.value = "";
+  }
+};
+import { onValue, set, remove } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+// 👤 Generate unique user ID for this session
+const userId = crypto.randomUUID();
+
+// 👥 Reference to this user's membership
+const memberRef = ref(db, `rooms/${roomId}/members/${userId}`);
+set(memberRef, true); // Add user to members list
+
+// 🔁 Remove user on leave or refresh
+window.addEventListener("beforeunload", () => {
+  remove(memberRef);
+});
+
+// 🔄 Live update member list
+const memberListRef = ref(db, `rooms/${roomId}/members`);
+onValue(memberListRef, (snapshot) => {
+  const members = snapshot.val() || {};
+const memberNames = Object.keys(members).filter(key => isNaN(key));
+  const memberNamesList = document.getElementById("memberNames");
+  memberNamesList.innerHTML = ""; // Clear previous
+
+  memberNames.forEach((id) => {
+    const li = document.createElement("li");
+    li.textContent = `User: ${id.slice(0, 5)}`; // Show short ID
+    memberNamesList.appendChild(li);
+  });
+});
+const canvas = document.getElementById("whiteboard");
+const ctx = canvas.getContext("2d");
+
+const colorPicker = document.getElementById("colorPicker");
+const brushSize = document.getElementById("brushSize");
+const clearBtn = document.getElementById("clearBtn");
+
+function resizeCanvasToDisplaySize(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+}
+
+resizeCanvasToDisplaySize(canvas);
+window.addEventListener("resize", () => resizeCanvasToDisplaySize(canvas));
+
+let drawing = false;
+let lastX = 0;
+let lastY = 0;
+
+function normalizeCoords(x, y) {
+  return { x: x / canvas.width, y: y / canvas.height };
+}
+function denormalizeCoords(x, y) {
+  return { x: x * canvas.width, y: y * canvas.height };
+}
+
+// ✍️ DRAWING EVENTS
+function startDraw(x, y) {
+  drawing = true;
+  lastX = x;
+  lastY = y;
+}
+
+function draw(x, y) {
+  if (!drawing) return;
+
+  ctx.strokeStyle = colorPicker.value;
+  ctx.lineWidth = brushSize.value;
+
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(x, y);
+  ctx.stroke();
+
+  const stroke = {
+    from: normalizeCoords(lastX, lastY),
+    to: normalizeCoords(x, y),
+    color: colorPicker.value,
+    width: parseInt(brushSize.value)
+  };
+
+  push(ref(db, `rooms/${roomId}/whiteboard`), stroke);
+
+  lastX = x;
+  lastY = y;
+}
+
+function stopDraw() {
+  drawing = false;
+}
+
+// 🖱 Mouse events
+canvas.addEventListener("mousedown", (e) => {
+  const rect = canvas.getBoundingClientRect();
+  startDraw(e.clientX - rect.left, e.clientY - rect.top);
+});
+canvas.addEventListener("mousemove", (e) => {
+  const rect = canvas.getBoundingClientRect();
+  draw(e.clientX - rect.left, e.clientY - rect.top);
+});
+canvas.addEventListener("mouseup", stopDraw);
+canvas.addEventListener("mouseleave", stopDraw);
+
+// Touch events (mobile)
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  startDraw(touch.clientX - rect.left, touch.clientY - rect.top);
+});
+canvas.addEventListener("touchmove", (e) => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  draw(touch.clientX - rect.left, touch.clientY - rect.top);
+});
+canvas.addEventListener("touchend", stopDraw);
+canvas.addEventListener("touchcancel", stopDraw);
+
+const clearModal = document.getElementById("clearModal");
+const confirmClearBtn = document.getElementById("confirmClearBtn");
+const cancelClearBtn = document.getElementById("cancelClearBtn");
+
+clearBtn.addEventListener("click", () => {
+  clearModal.style.display = "flex"; // Show popup
+});
+
+cancelClearBtn.addEventListener("click", () => {
+  clearModal.style.display = "none";
+});
+
+confirmClearBtn.addEventListener("click", () => {
+  remove(ref(db, `rooms/${roomId}/whiteboard`));
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  clearModal.style.display = "none";
+});
+
+
+// 🔄 REDRAW from Firebase strokes
+onChildAdded(ref(db, `rooms/${roomId}/whiteboard`), (snapshot) => {
+  const stroke = snapshot.val();
+  const from = denormalizeCoords(stroke.from.x, stroke.from.y);
+  const to = denormalizeCoords(stroke.to.x, stroke.to.y);
+
+  ctx.strokeStyle = stroke.color || "#000";
+  ctx.lineWidth = stroke.width || 2;
+
+  ctx.beginPath();
+  ctx.moveTo(from.x, from.y);
+  ctx.lineTo(to.x, to.y);
+  ctx.stroke();
+});
+const themeSelect = document.getElementById("themeSelect");
+const bodyEl = document.querySelector("body.study-room");
+
+themeSelect.addEventListener("change", () => {
+  const gradient = themeSelect.value;
+  if (gradient) {
+    bodyEl.style.background = gradient;
+  } else {
+    // reset to default background color
+    bodyEl.style.background = "#f4f4fa";
+  }
+  localStorage.setItem("selectedTheme", gradient);
+});
+
+// On page load, restore saved theme if any
+window.addEventListener("DOMContentLoaded", () => {
+  const savedGradient = localStorage.getItem("selectedTheme");
+  if (savedGradient) {
+    bodyEl.style.background = savedGradient;
+    themeSelect.value = savedGradient;
+  }
+});
+const leftPanel = document.querySelector('.left-panel');
+const centerPanel = document.querySelector('.center-panel');
+const rightPanel = document.querySelector('.right-panel');
+
+const panelColors = {
+  "": ["lavender", "#e6e6fa", "#f0e6ff"], // Default theme panels
+  "linear-gradient(135deg, #667eea, #764ba2)": ["#667eea", "#7a6fcf", "#764ba2"],   // Purple Bliss
+  "linear-gradient(135deg, #f7971e, #ffd200)": ["#f7971e", "#ffbf30", "#ffd200"],   // Sunny Day
+  "linear-gradient(135deg, #11998e, #38ef7d)": ["#11998e", "#28c497", "#38ef7d"],   // Emerald Flow
+  "linear-gradient(135deg, #ff416c, #ff4b2b)": ["#ff416c", "#ff5a4d", "#ff4b2b"]    // Sunset Glow
+};
+
+themeSelect.addEventListener("change", () => {
+  const selectedGradient = themeSelect.value;
+  
+  
+  // Change body background
+  if (selectedGradient) {
+    bodyEl.style.background = selectedGradient;
+  } else {
+    bodyEl.style.background = "#f4f4fa";
+  }
+  localStorage.setItem("selectedTheme", selectedGradient);
+  
+  // Change panel backgrounds
+  const colors = panelColors[selectedGradient] || panelColors[""];
+  leftPanel.style.backgroundColor = colors[0];
+  centerPanel.style.backgroundColor = colors[1];
+  rightPanel.style.backgroundColor = colors[2];
+  
+});
+
+</script>
+
+
+<script src="js/timer.js"></script>
+<!-- 🧽 Custom Clear Board Modal -->
+<div id="clearModal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>Clear the whiteboard?</h3>
+    <p>This will erase everything for everyone in the room.</p>
+    <div class="modal-actions">
+      <button id="cancelClearBtn" class="btn cancel">Cancel</button>
+      <button id="confirmClearBtn" class="btn danger">Yes, Clear</button>
+      
+    </div>
+  </div>
+  
+</div>
+
+</body>
+</html>

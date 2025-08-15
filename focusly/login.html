@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Log In – Focusly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="container center">
+  <div class="form-card">
+    <h1>Welcome Back to Focusly</h1>
+    <form id="loginForm">
+  <input type="email" placeholder="Email Address" required />
+  <input type="password" placeholder="Password" required />
+
+  <label class="remember-me">
+    <input type="checkbox" id="rememberMe" />
+    Remember me
+  </label>
+
+  <button type="submit">Log In</button>
+</form>
+
+    <p>New here? <a href="signup.html">Create an account</a></p>
+    <button onclick="window.history.back()" class="back-btn">⬅ Back to Welcome</button>
+  </div>
+
+  <!-- ✅ Firebase v8 SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+  <!-- ✅ Firebase Auth Code -->
+  
+  <script>
+  function showPopup(message, type = "error") {
+    const popup = document.createElement("div");
+    popup.className = `popup ${type === "success" ? "success" : ""}`;
+    popup.innerText = message;
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+      popup.remove();
+    }, 3000);
+  }
+</script>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<!-- ✅ This is the one that matters -->
+<script src="js/login.js"></script>
+
+
+</body>
+</html>

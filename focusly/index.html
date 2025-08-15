@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Focusly – Learn Together, Grow Together</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="ills/Ffavi2.png" type="image/x-icon" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="description" content="Focusly is a collaborative learning and focus platform where people connect, learn, and grow together. Join rooms, share resources, and stay motivated.">
+  <meta name="keywords" content="collaborative learning, study together, focus platform, group learning, productivity">
+  <meta property="og:title" content="Focusly – Learn Together, Grow Together">
+  <meta property="og:description" content="Join a global community of learners on Focusly. Study, share, and grow together.">
+</head>
+<body>
+<div id="branding-loader">
+  <img src="ills/Ffavi2-removebg-preview.png"Focusly Log class="branding-logo">
+<p class="branding-text">
+  Powered by <span class="synth">Synth</span> <span class="studio">Studio</span>
+</p>
+
+</div>
+
+
+
+  <!-- Navigation -->
+  <header class="navbar">
+  <div class="logo">
+    <img src="ills/Ffavi2-removebg-preview.png" alt="Focusly Logo" class="logo-icon" />
+    Focusly
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn" onclick="guestContinue()">Guest</button>
+    <a href="learnmore.html" class="nav-btn outline">Learn More</a>
+  </div>
+</header>
+
+  <!-- Hero Section -->
+<main class="hero">
+  <div class="hero-text">
+    <h1>Welcome to <span class="focusly">Focusly</span> 👋</h1>
+    <p class="tagline">Learn together, grow together.</p>
+
+    <div class="cta-buttons">
+      <button class="cta" onclick="goToSignup()">Sign Up</button>
+      <button class="cta outline" onclick="goToLogin()">Log In</button>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <img src="ills/Flat-Illustration-People-are-studying3-Graphics-7187616-1.jpg" alt="Study Illustration" class="hero-img">
+  </div>
+</main>
+
+  <style>
+    /* Font & Colors */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+  --primary: #7b68ee;
+  --primary-dark: #6c5ce7;
+  --bg: #f4f7fa;
+  --text: #111827;
+  --card: #ffffff;
+  --border: #e2e8f0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  padding: 16px 32px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.nav-buttons .nav-btn {
+  margin-left: 12px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn.outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.nav-btn:hover {
+  background: var(--primary-dark);
+  color: white;
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.hero-text {
+  flex: 1;
+  min-width: 300px;
+  text-align: center;
+}
+
+.focusly {
+  color: var(--primary);
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: #4b5563;
+  margin: 12px 0 24px;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.cta {
+  padding: 12px 26px;
+  font-size: 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  background-color: var(--primary);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.cta:hover {
+  background-color: var(--primary-dark);
+}
+
+.cta.outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+}
+
+.cta.outline:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Hero Image */
+.hero-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 280px;
+}
+
+.hero-img {
+  max-width: 90%;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero {
+    flex-direction: column-reverse;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .hero-text {
+    margin-top: 20px;
+  }
+
+  .cta {
+    width: 100%;
+  }
+
+  .hero-img {
+    width: 80%;
+  }
+}
+
+  </style>
+  <script src="js/main.js" defer></script>
+
+  <!-- Persistent Login Check -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      // Your Firebase config here
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "home.html";
+      }
+    });
+
+
+
+
+  </script>
+  
+</body>
+</html>
+
+

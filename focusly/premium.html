@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focusly Premium</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f4f7fa, #d8dcff);
+      color: #111827;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #6c5ce7;
+      margin-bottom: 10px;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      color: #555;
+      margin-bottom: 40px;
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 40px 0;
+      animation: fadeInUp 1.3s ease-out;
+    }
+
+    .feature-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-emoji {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .feature-desc {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .price-box {
+      background: linear-gradient(135deg, #7b68ee, #a18bff);
+      color: white;
+      padding: 40px 30px;
+      border-radius: 20px;
+      margin-top: 40px;
+      box-shadow: 0 0 20px rgba(123, 104, 238, 0.4);
+      animation: fadeInUp 1.5s ease-out;
+    }
+
+    .price-box h2 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .price-box p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+    }
+
+    .buy-btn {
+      background-color: #fff;
+      color: #6c5ce7;
+      padding: 14px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .buy-btn:hover {
+      background-color: #f1edff;
+      transform: scale(1.05);
+    }
+
+    .back-link {
+      margin-top: 30px;
+      display: inline-block;
+      color: #6c5ce7;
+      text-decoration: none;
+      font-weight: 500;
+      animation: fadeIn 2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Focusly Premium</h1>
+    <p class="tagline">Unlock elite features, boost your focus, and flex your productivity skills.</p>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-emoji">📊</div>
+        <div class="feature-title">Smart Analytics</div>
+        <div class="feature-desc">Track your focus time, XP, and session stats weekly.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-emoji">⚡</div>
+        <div class="feature-title">XP Boost & Titles</div>
+        <div class="feature-desc">Get double XP and earn premium badges like “Study Demon”.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-emoji">🎧</div>
+        <div class="feature-title">Lofi & Sound Packs</div>
+        <div class="feature-desc">Unlock ambient music for deep focus sessions.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-emoji">🎨</div>
+        <div class="feature-title">Custom Themes</div>
+        <div class="feature-desc">Personalize your study room with dark mode and cool themes.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-emoji">🎁</div>
+        <div class="feature-title">Premium Resource Packs</div>
+        <div class="feature-desc">Get exclusive templates, study guides, and productivity tools.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-emoji">🔒</div>
+        <div class="feature-title">Private Room Features</div>
+        <div class="feature-desc">Lock rooms, co-host, and save whiteboard/chat history.</div>
+      </div>
+    </div>
+
+    <div class="price-box">
+      <h2>₹99 – Lifetime Access</h2>
+      <p>No subscriptions. Just pure premium productivity.</p>
+      <a href="soon.html" class="buy-btn" target="_blank">🔓 Unlock Premium</a>
+    </div>
+
+    <a href="home.html" class="back-link">← Back to Home</a>
+  </div>
+</body>
+</html>
+

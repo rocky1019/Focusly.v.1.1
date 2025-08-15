@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Focusly Profile</title>
+  <style>
+    :root {
+      --primary: #7b68ee;
+      --primary-dark: #6c5ce7;
+      --bg: #f4f7fa;
+      --text: #111827;
+      --card: #ffffff;
+      --border: #e2e8f0;
+    }
+
+    /* Animated gradient background */
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(-45deg, #7b68ee, #6c5ce7, #a29bfe, #dfe6e9);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text);
+      text-align: center;
+      padding: 2rem;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    /* Card container */
+    .profile-card {
+      background: var(--card);
+      color: var(--text);
+      padding: 2rem 3rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(123, 104, 238, 0.2);
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    .avatar {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+      filter: drop-shadow(0 0 3px var(--primary-dark));
+      user-select: none;
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+      text-shadow: 0 0 6px var(--primary-dark);
+    }
+
+    .streak {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      background: var(--primary);
+      color: var(--card);
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      display: inline-block;
+      box-shadow: 0 4px 10px var(--primary-dark);
+      user-select: none;
+    }
+
+    .badge {
+      margin-top: 1rem;
+      font-size: 2.5rem;
+      user-select: none;
+    }
+
+    .motivation {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      color: var(--primary-dark);
+      font-style: italic;
+      user-select: none;
+    }
+
+    .loading {
+      font-style: italic;
+      margin-top: 2rem;
+      color: var(--border);
+      user-select: none;
+    }
+
+    /* Back to Home Button */
+    .back-btn {
+      margin-top: 2rem;
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: var(--primary-dark);
+      color: var(--card);
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.85rem;
+      box-shadow: 0 3px 6px var(--primary-dark);
+      user-select: none;
+    }
+
+    .back-btn:hover {
+      background-color: var(--primary);
+      box-shadow: 0 5px 15px var(--primary);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 480px) {
+      .profile-card {
+        padding: 1.5rem 1.5rem;
+        max-width: 90vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <div class="avatar" aria-label="User Avatar">👤</div>
+    <h1 id="displayName">Loading...</h1>
+    <div id="streakContainer" style="display:none;">
+      <div class="streak" id="streakCount">0</div>
+      <div class="badge" id="streakBadge"></div>
+    </div>
+    <div class="motivation" id="motivationMsg"></div>
+    <div class="loading" id="loadingMsg">Fetching your profile data...</div>
+  </div>
+
+  <a href="home.html" class="back-btn">← Back to Home</a>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrqad_1R9l322_Rg0K-UtKImEMn2nqWcE",
+      authDomain: "atharva19focusly.firebaseapp.com",
+      databaseURL: "https://atharva19focusly-default-rtdb.firebaseio.com",
+      projectId: "atharva19focusly",
+      storageBucket: "atharva19focusly.appspot.com",
+      messagingSenderId: "277269253347",
+      appId: "1:277269253347:web:20b6f3cc29473f3093c9d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const displayNameEl = document.getElementById("displayName");
+    const streakCountEl = document.getElementById("streakCount");
+    const streakBadgeEl = document.getElementById("streakBadge");
+    const streakContainer = document.getElementById("streakContainer");
+    const loadingMsg = document.getElementById("loadingMsg");
+    const motivationMsg = document.getElementById("motivationMsg");
+
+    function getBadgeEmoji(streak) {
+      if (streak >= 30) return "🏆";
+      if (streak >= 14) return "🎉";
+      if (streak >= 7) return "🔥";
+      if (streak >= 3) return "✨";
+      return "👍";
+    }
+
+    function animateCountUp(element, target) {
+      let current = 0;
+      const step = Math.ceil(target / 50);
+      const interval = setInterval(() => {
+        current += step;
+        if(current >= target) {
+          element.textContent = target;
+          clearInterval(interval);
+        } else {
+          element.textContent = current;
+        }
+      }, 20);
+    }
+
+    const messages = [
+      "Keep pushing, you're doing great! 🚀",
+      "Consistency is key 🔑",
+      "Every day counts! 💪",
+      "Your focus is your power ⚡",
+    ];
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = ref(db, 'users/' + user.uid);
+        try {
+          // Create default profile if not exists
+          const snapshot = await get(userRef);
+          if (!snapshot.exists()) {
+            await set(userRef, {
+              displayName: user.displayName || "Focusly User",
+              studyStreak: 0,
+              lastStudyDate: null
+            });
+            console.log("New user profile created.");
+          }
+
+          // Load profile data
+          const updatedSnapshot = await get(userRef);
+          const userData = updatedSnapshot.val();
+
+          const name = userData.displayName || "Focusly User";
+          const streak = userData.studyStreak || 0;
+
+          displayNameEl.textContent = name;
+
+          // Animate streak count
+          streakCountEl.textContent = "Current Study Streak: ";
+          const countSpan = document.createElement("span");
+          streakCountEl.appendChild(countSpan);
+          animateCountUp(countSpan, streak);
+
+          streakBadgeEl.textContent = getBadgeEmoji(streak);
+
+          streakContainer.style.display = "inline-block";
+          loadingMsg.style.display = "none";
+
+          // Show random motivational message
+          motivationMsg.textContent = messages[Math.floor(Math.random() * messages.length)];
+
+        } catch (error) {
+          displayNameEl.textContent = "Error loading profile";
+          loadingMsg.textContent = error.message;
+          console.error(error);
+        }
+      } else {
+        displayNameEl.textContent = "Please log in to see your profile.";
+        loadingMsg.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+

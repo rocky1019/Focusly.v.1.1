@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Write Test</title>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrqad_1R9l322_Rg0K-UtKImEMn2nqWcE",
+      authDomain: "atharva19focusly.firebaseapp.com",
+      databaseURL: "https://atharva19focusly-default-rtdb.firebaseio.com",
+      projectId: "atharva19focusly",
+      storageBucket: "atharva19focusly.appspot.com",
+      messagingSenderId: "277269253347",
+      appId: "1:277269253347:web:20b6f3cc29473f3093c9d6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // This creates testRoom data in your DB
+    set(ref(db, 'testRoom'), {
+      username: "Atharva",
+      message: "Hello Firebase!"
+    }).then(() => {
+      alert("✅ Data written successfully!");
+    }).catch((error) => {
+      alert("❌ Write failed: " + error.message);
+    });
+  </script>
+</head>
+<body>
+  <h1>Writing to Firebase...</h1>
+</body>
+</html>

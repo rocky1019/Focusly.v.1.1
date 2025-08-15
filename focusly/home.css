@@ -1,0 +1,453 @@
+/* ---------- VARIABLES ---------- */
+:root {
+  --primary: #7b68ee;
+  --primary-dark: #6c5ce7;
+  --bg: #f4f7fa;
+  --text: #111827;
+  --card: #ffffff;
+  --border: #e2e8f0;
+}
+
+/* ---------- GENERAL RESET ---------- */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+  background-color: var(--primary);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  margin: 1rem auto 0 auto; /* Push it a bit up and center it */
+  width: 95%; /* So rounding is visible */
+  max-width: 1200px;
+    margin-top: -99px;
+    margin-bottom: 35px;
+}
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+
+  .nav-left, .nav-right {
+    width: 100%;
+  }
+
+  .nav-right {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link:hover {
+  opacity: 0.8;
+}
+
+.logout-btn {
+  background-color: white;
+  color: var(--primary-dark);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.logout-btn:hover {
+  background-color: #e0dbff;
+}
+
+/* ---------- DASHBOARD ---------- */
+.dashboard-container {
+  margin-top: 100px;
+  padding: 2rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+/* ---------- QUICK ACTIONS ---------- */
+.quick-actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.quick-actions button {
+  flex: 1;
+  padding: 1rem;
+  background-color: var(--primary-dark);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.quick-actions button:hover {
+  background-color: var(--primary);
+}
+
+/* ---------- SECTIONS ---------- */
+section {
+  margin-bottom: 2rem;
+  background-color: var(--card);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+section h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+/* ---------- RESOURCES + SUPPORT ---------- */
+.resources ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resources li {
+  margin-bottom: 0.75rem;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.resources li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+}
+
+.support a {
+  color: var(--primary-dark);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.support a:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  background-color: var(--bg); /* same subtle background */
+  color: var(--text);
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+  padding: 1.5rem 1rem;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+.footer h2 {
+  font-size: 18px;
+  margin-bottom: 0.25rem;
+}
+
+.footer p {
+  opacity: 0.8;
+  margin: 0;
+}
+
+.footer-links ul,
+.footer-social ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li,
+.footer-social li {
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer a {
+  color: var(--text);
+  text-decoration: none;
+  transition: 0.2s;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  text-align: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-size: 13px;
+  opacity: 0.65;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+.footer {
+  background-color: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.footer h2 {
+  font-size: 18px;
+  margin-bottom: 0.4rem;
+}
+
+.footer p.version {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.footer h4 {
+  font-size: 15px;
+  margin-bottom: 0.5rem;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer li {
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  opacity: 0.7;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .footer-links,
+  .footer-social,
+  .footer-legal {
+    margin-top: 1rem;
+  }
+}
+.premium-btn {
+  display: inline-block;
+  background-color: #7b68ee;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+.premium-btn:hover {
+  background-color: #6c5ce7;
+}
+.home-card {
+  background-color: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.premium-features-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1rem;
+}
+
+.premium-features-buttons button {
+  padding: 10px 16px;
+  border: none;
+  background-color: #7b68ee;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.premium-features-buttons button:hover {
+  background-color: #5f52d6;
+}
+.premium-button {
+  display: inline-block;
+  background-color: var(--primary);
+  color: white;
+  padding: 16px 32px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.premium-button:hover {
+  background-color: var(--primary-dark);
+  transform: scale(1.05);
+}
+.coming-soon-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  border-radius: 1rem;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  margin-top: 3rem;
+}
+
+.buy-premium-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  cursor: not-allowed; /* Since it's not live yet */
+  opacity: 0.7;
+}
+/* ---------- XP & LEVEL CARD ---------- */
+.xp-card {
+  background-color: var(--card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.xp-info {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.xp-progress-bar {
+  width: 100%;
+  height: 12px;
+  background-color: var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+#xp-fill {
+  height: 100%;
+  background-color: var(--primary);
+  width: 0%;
+  transition: width 0.3s ease;
+}

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Focusly – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="home.css" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="dashboard-container">
+<nav class="navbar">
+  <div class="nav-left">
+    <h1 class="logo">📗 Focusly</h1>
+  </div>
+  <div class="nav-right">
+    <a href="room.html" class="nav-link">Rooms</a>
+    <a href="profile.html" class="nav-link">Profile</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+</nav>
+
+  <!-- Top Banner -->
+  <header class="dashboard-header">
+    <div>
+      <h2>Good evening, Learner 👋</h2>
+      <p class="tagline">"Every session is one step closer to your goals."</p>
+    </div>
+  </header>
+
+  <section class="quick-actions">
+  <button id="createBtn">➕ Create Study Group</button>
+  <button id="joinBtn">✅ Join Room</button>
+  <button id="publicBtn">🌍 Join Public Room</button></section>
+
+  <!-- My Study Groups -->
+  <section class="my-groups">
+    <h3>📘 My Study Groups</h3>
+    <ul id="groupList"></ul>
+  </section>
+
+  <!-- Motivation & Stats -->
+  <section class="motivation">
+    <h3 id="streak">🔥 Study Streak: 0 Days</h3>
+    <p id="quote">💡 Loading motivation...</p>
+  </section>
+<section class="xp-card">
+  <h3>Your Level</h3>
+  <div class="xp-info">
+    <span id="level-text">Level 1</span>
+    <span id="xp-text">0 / 100 XP</span>
+  </div>
+  <div class="xp-progress-bar">
+    <div id="xp-fill"></div>
+  </div>
+</section>
+
+  <!-- Help -->
+  <section class="support">
+    <h3>❓ Need Help?</h3>
+    <p>
+     <a href="#" id="howToJoin">How to Join a Group</a>
+
+      <a href="mailto:atharvaaghav6@gmail.com">Contact Support</a>
+    </p>
+  </section>
+<div class="home-card">
+  <h3>💎 <strong>Premium Features</strong></h3>
+  <p>Unlock the full potential of Focusly with premium tools:</p>
+
+  <div class="premium-features-buttons">
+    <button onclick="alert('Coming soon')">📊 View Analytics</button>
+    <button onclick="alert('Coming soon')">🎧 Ambient Music</button>
+    <button onclick="alert('Coming soon')">🧠 Flashcards Generator</button>
+    <button onclick="alert('Coming soon')">🎨 Custom Themes</button>
+    <button onclick="alert('Coming soon')">✍️ Session Recaps</button>
+  </div>
+</div>
+<div style="text-align: center; margin-top: 40px;">
+  <a href="premium.html" class="premium-button">Get Premium</a>
+</div>
+
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+  import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCrqad_1R9l322_Rg0K-UtKImEMn2nqWcE",
+    authDomain: "atharva19focusly.firebaseapp.com",
+    databaseURL: "https://atharva19focusly-default-rtdb.firebaseio.com",
+    projectId: "atharva19focusly",
+    storageBucket: "atharva19focusly.appspot.com",
+    messagingSenderId: "277269253347",
+    appId: "1:277269253347:web:20b6f3cc29473f3093c9d6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  function generateCode(length = 5) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    return Array.from({length}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  }
+
+    async function createRoom() {
+    const code = generateCode();
+    const roomRef = ref(db, `rooms/${code}`);
+    await set(roomRef, {
+      createdAt: Date.now(),
+      members: ["You"],
+    });
+
+    // Show custom modal
+    document.getElementById("roomModal").style.display = "flex";
+    document.getElementById("roomCode").textContent = code;
+    document.getElementById("goToRoomBtn").onclick = () => {
+      window.location.href = `room.html?code=${code}`;
+    };
+  }
+
+async function joinRoom() {
+  const { value: roomCode } = await Swal.fire({
+    title: "Join a Room",
+    input: "text",
+    inputLabel: "Enter the room code",
+    inputPlaceholder: "ABCDE",
+    showCancelButton: true,
+  });
+
+  if (!roomCode) return;
+
+  const dbRef = ref(db);
+  try {
+    const snapshot = await get(child(dbRef, `rooms/${roomCode}`));
+    if (snapshot.exists()) {
+      window.location.href = `room.html?code=${roomCode}`;
+    } else {
+      Swal.fire("❌ Room not found", "Check the code and try again.", "error");
+    }
+  } catch (error) {
+    console.error("Error checking room:", error);
+    Swal.fire("⚠️ Error", "Could not join the room. Try again later.", "error");
+  }
+}
+
+
+
+  // --- Streak Logic ---
+  const streakEl = document.getElementById("streak");
+  const today = new Date().toDateString();
+  const lastVisit = localStorage.getItem("lastVisit");
+  let streak = parseInt(localStorage.getItem("streak")) || 1;
+
+  if (lastVisit) {
+    const diffDays = Math.floor((new Date(today) - new Date(lastVisit)) / (1000 * 60 * 60 * 24));
+    if (diffDays === 1) streak++;
+    else if (diffDays > 1) streak = 1;
+  }
+
+  localStorage.setItem("lastVisit", today);
+  localStorage.setItem("streak", streak);
+  streakEl.textContent = `🔥 Study Streak: ${streak} Day${streak === 1 ? '' : 's'}`;
+
+  // --- Daily Motivation ---
+  const quotes = [
+    "Focus beats talent when talent doesn't focus.",
+    "One hour of focused study beats five distracted ones.",
+    "Discipline is doing it even when you don’t feel like it.",
+    "Tiny progress is still progress.",
+    "You’re not behind. You’re just getting started.",
+    "Be stronger than your excuses.",
+    "Start now. You’re not too late."
+  ];
+
+  const quoteEl = document.getElementById("quote");
+  const quoteIndex = new Date().getDate() % quotes.length;
+  quoteEl.textContent = `💡 "${quotes[quoteIndex]}"`;
+  document.getElementById("createBtn").addEventListener("click", createRoom);
+document.getElementById("joinBtn").addEventListener("click", joinRoom);
+document.getElementById("howToJoin").addEventListener("click", (e) => {
+  e.preventDefault();
+  Swal.fire({
+    title: "How to Join a Group",
+    text: "Ask your friend for their room code, then click 'Join Room' above and enter the code.",
+    icon: "info",
+    confirmButtonText: "Got it!"
+  });
+});
+// Public room join/create
+document.getElementById("publicBtn").addEventListener("click", async () => {
+  const publicCode = "PUBLIC";
+  const roomRef = ref(db);
+  try {
+    const snapshot = await get(child(roomRef, `rooms/${publicCode}`));
+
+    if (!snapshot.exists()) {
+      // Create public room if it doesn't exist
+      await set(ref(db, `rooms/${publicCode}`), {
+        createdAt: Date.now(),
+        members: [],
+        isPublic: true
+      });
+    }
+
+    // Redirect to public room
+    window.location.href = `room.html?code=${publicCode}`;
+  } catch (error) {
+    console.error("Error joining public room:", error);
+    alert("⚠️ Could not join public room. Try again later.");
+  }
+});
+// XP & Level system
+let xp = parseInt(localStorage.getItem("xp")) || 0;
+let level = parseInt(localStorage.getItem("level")) || 1;
+const xpPerLevel = 100;
+
+function updateXPUI() {
+  const xpFill = document.getElementById("xp-fill");
+  const levelText = document.getElementById("level-text");
+  const xpText = document.getElementById("xp-text");
+
+  let currentLevelXP = xp % xpPerLevel;
+  let progress = (currentLevelXP / xpPerLevel) * 100;
+
+  xpFill.style.width = `${progress}%`;
+  levelText.textContent = `Level ${level}`;
+  xpText.textContent = `${currentLevelXP} / ${xpPerLevel} XP`;
+}
+
+function addXP(amount) {
+  xp += amount;
+  if (xp >= level * xpPerLevel) {
+    level++;
+  }
+  localStorage.setItem("xp", xp);
+  localStorage.setItem("level", level);
+  updateXPUI();
+  updateXPUI();
+triggerFireworks();
+}
+
+function initXPSystem() {
+  updateXPUI();
+  updateXPUI();
+triggerFireworks();
+
+const createRoomBtn = document.querySelector('#createBtn');
+const joinRoomBtn = document.querySelector('#joinBtn');
+const joinPublicBtn = document.querySelector('#publicBtn');
+
+if (createRoomBtn) createRoomBtn.addEventListener("click", () => addXP(20));
+if (joinRoomBtn) joinRoomBtn.addEventListener("click", () => addXP(10));
+if (joinPublicBtn) joinPublicBtn.addEventListener("click", () => addXP(15));
+
+}
+
+// Run when page loads
+document.addEventListener("DOMContentLoaded", initXPSystem);
+function triggerFireworks() {
+  const container = document.getElementById("fireworksContainer");
+  
+  for (let i = 0; i < 30; i++) {
+    const spark = document.createElement("div");
+    spark.style.position = "absolute";
+    spark.style.width = "6px";
+    spark.style.height = "6px";
+    spark.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 60%)`;
+    spark.style.borderRadius = "50%";
+    spark.style.top = `${Math.random()*80 + 10}%`;
+    spark.style.left = `${Math.random()*80 + 10}%`;
+    spark.style.opacity = 1;
+    spark.style.transform = `translate(0,0)`;
+
+    container.appendChild(spark);
+
+    const angle = Math.random()*2*Math.PI;
+    const distance = Math.random()*100 + 50;
+
+    spark.animate([
+      { transform: `translate(0,0)`, opacity: 1 },
+      { transform: `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)`, opacity: 0 }
+    ], { duration: 800 + Math.random()*400, easing: "ease-out" });
+
+    setTimeout(() => container.removeChild(spark), 1200);
+  }
+}
+
+</script>
+<!-- ✅ Room Created Modal -->
+<div id="roomModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#00000088; z-index:999; justify-content:center; align-items:center;">
+  <div style="background:#fff; padding:2rem; border-radius:12px; text-align:center; max-width:90%; width:300px;">
+    <h2 style="margin-bottom:1rem;">✅ Room Created!</h2>
+    <p style="font-size:1.2rem;">Room Code: <span id="roomCode" style="font-weight:bold;"></span></p>
+    <button id="goToRoomBtn" style="margin-top:1rem; padding:10px 20px; background:#111; color:#fff; border:none; border-radius:8px; cursor:pointer;">
+      Join Room
+    </button>
+  </div>
+</div>
+<!-- Lucide Icon CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Brand -->
+    <div class="footer-brand">
+      <h2>📗 Focusly</h2>
+      <p>Stay focused. Study together.</p>
+      <p class="version">v1.0</p>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <ul>
+        <li>🏠 <a href="home.html">Home</a></li>
+        <li>📚 <a href="room.html">Study Rooms</a></li>
+        <li>📎 <a href="#">Resources</a></li>
+        <li>ℹ️ <a href="about.html">About</a></li>
+      </ul>
+    </div>
+
+    <!-- Legal -->
+    <div class="footer-legal">
+      <h4>Legal</h4>
+      <ul>
+        <li>🔐 <a href="privacy.html">Privacy Policy</a></li>
+        <li>📄 <a href="terms.html">Terms & Conditions</a></li>
+      </ul>
+    </div>
+
+    <!-- Social -->
+    <div class="footer-social">
+      <h4>Connect</h4>
+      <ul>
+        <li>📸 <a href="https://instagram.com/focusly.app" target="_blank">Instagram</a></li>
+        <li>💬 <a href="https://x.com/AtharvaAgh52315">X</a></li>
+        <li>🐙 <a href="https://github.com/rocky1019">GitHub</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2025 Focusly • Built with 💻 by Synth Studios</p>
+  </div>
+</footer>
+
+<script>
+  lucide.createIcons();
+</script>
+
+<script src="js/main.js"></script>
+<div id="fireworksContainer" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999;"></div>
+
+</body>
+</html>
+
+
+
+
